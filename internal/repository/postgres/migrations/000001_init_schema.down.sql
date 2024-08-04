@@ -1,0 +1,2 @@
+DROP TABLE IF EXISTS currency;
+DROP TABLE IF EXISTS currency_price;

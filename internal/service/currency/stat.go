@@ -9,7 +9,6 @@ import (
 	"time"
 )
 
-// делаю параллельные запросы потому что клиент бинанса который я использую в кейсе когда len(symbols)>1 все равно возвращает только 1
 func (s *Currency) GetStat24H(ctx context.Context, symbols ...string) ([]model.GetCurrencyStat24HDTO, error) {
 	return s.fetchStats24H(ctx, symbols...)
 }

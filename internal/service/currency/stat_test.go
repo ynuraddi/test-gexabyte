@@ -28,6 +28,8 @@ func TestGetStat24H(t *testing.T) {
 		binanceClient:     binanceClient,
 	}
 
+	unexpectedErr := fmt.Errorf("unexpected")
+
 	ticker24hDefaultResopnce := &binance_connector.Ticker24hrResponse{
 		Symbol:    "BTCUSDT",
 		OpenPrice: "1.1",
@@ -37,8 +39,6 @@ func TestGetStat24H(t *testing.T) {
 		OpenTime:  1,
 		CloseTime: 2,
 	}
-
-	unexpectedErr := fmt.Errorf("unexpected")
 
 	tc := []struct {
 		name        string
@@ -54,6 +54,7 @@ func TestGetStat24H(t *testing.T) {
 			},
 			checkResult: func(t *testing.T, res []model.GetCurrencyStat24HDTO, err error) {
 				assert.NoError(t, err)
+				assert.NotEmpty(t, res)
 
 				openPrice, err := strconv.ParseFloat(ticker24hDefaultResopnce.OpenPrice, 64)
 				assert.NoError(t, err)
@@ -77,6 +78,7 @@ func TestGetStat24H(t *testing.T) {
 			},
 			checkResult: func(t *testing.T, res []model.GetCurrencyStat24HDTO, err error) {
 				assert.NoError(t, err)
+				assert.NotEmpty(t, res)
 				assert.Equal(t, 3, len(res))
 
 				openPrice, err := strconv.ParseFloat(ticker24hDefaultResopnce.OpenPrice, 64)
@@ -102,6 +104,7 @@ func TestGetStat24H(t *testing.T) {
 			checkResult: func(t *testing.T, res []model.GetCurrencyStat24HDTO, err error) {
 				assert.Error(t, err)
 				assert.Equal(t, err, unexpectedErr)
+				assert.Nil(t, res)
 			},
 		},
 	}
@@ -161,10 +164,10 @@ func TestFetchStat24H(t *testing.T) {
 			name:   "error parse open price",
 			symbol: "1",
 			buildStubs: func(binance *mock_binance.MockClient) {
-				res := ticker24hDefaultResopnce
+				res := *ticker24hDefaultResopnce
 				res.OpenPrice = "incorrect"
 
-				binance.EXPECT().Ticker24hService(gomock.Any(), gomock.Eq("1")).Times(1).Return(res, nil)
+				binance.EXPECT().Ticker24hService(gomock.Any(), gomock.Eq("1")).Times(1).Return(&res, nil)
 			},
 			checkResult: func(t *testing.T, res model.GetCurrencyStat24HDTO, err error) {
 				assert.Error(t, err)
@@ -174,10 +177,10 @@ func TestFetchStat24H(t *testing.T) {
 			name:   "error parse last price",
 			symbol: "1",
 			buildStubs: func(binance *mock_binance.MockClient) {
-				res := ticker24hDefaultResopnce
+				res := *ticker24hDefaultResopnce
 				res.LastPrice = "incorrect"
 
-				binance.EXPECT().Ticker24hService(gomock.Any(), gomock.Eq("1")).Times(1).Return(res, nil)
+				binance.EXPECT().Ticker24hService(gomock.Any(), gomock.Eq("1")).Times(1).Return(&res, nil)
 			},
 			checkResult: func(t *testing.T, res model.GetCurrencyStat24HDTO, err error) {
 				assert.Error(t, err)
@@ -187,10 +190,10 @@ func TestFetchStat24H(t *testing.T) {
 			name:   "error parse high price",
 			symbol: "1",
 			buildStubs: func(binance *mock_binance.MockClient) {
-				res := ticker24hDefaultResopnce
+				res := *ticker24hDefaultResopnce
 				res.HighPrice = "incorrect"
 
-				binance.EXPECT().Ticker24hService(gomock.Any(), gomock.Eq("1")).Times(1).Return(res, nil)
+				binance.EXPECT().Ticker24hService(gomock.Any(), gomock.Eq("1")).Times(1).Return(&res, nil)
 			},
 			checkResult: func(t *testing.T, res model.GetCurrencyStat24HDTO, err error) {
 				assert.Error(t, err)
@@ -200,10 +203,10 @@ func TestFetchStat24H(t *testing.T) {
 			name:   "error parse low price",
 			symbol: "1",
 			buildStubs: func(binance *mock_binance.MockClient) {
-				res := ticker24hDefaultResopnce
+				res := *ticker24hDefaultResopnce
 				res.LowPrice = "incorrect"
 
-				binance.EXPECT().Ticker24hService(gomock.Any(), gomock.Eq("1")).Times(1).Return(res, nil)
+				binance.EXPECT().Ticker24hService(gomock.Any(), gomock.Eq("1")).Times(1).Return(&res, nil)
 			},
 			checkResult: func(t *testing.T, res model.GetCurrencyStat24HDTO, err error) {
 				assert.Error(t, err)

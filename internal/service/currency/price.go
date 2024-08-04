@@ -43,8 +43,11 @@ func (s *Currency) GetCurrentPrices(ctx context.Context, symbols ...string) ([]m
 				Time:       startReqTime,
 			})
 		}
-		if err := s.CreatePrice(ctx, saveDB...); err != nil {
-			return nil, err
+		if len(saveDB) > 0 { // case when db currency is empty
+			err := s.CreatePrice(ctx, saveDB...)
+			if err != nil {
+				return nil, err
+			}
 		}
 		s.priceCheckTicker.Reset(s.priceCheckInterval)
 	}
@@ -114,7 +117,7 @@ func (s *Currency) fetchCurrentPrices(ctx context.Context, symbols ...string) (m
 }
 
 func (s *Currency) fetchCurrentPrice(ctx context.Context, symbol string) (price float64, err error) {
-	res, err := s.binanceClient.TickerService(ctx, symbol)
+	res, err := s.binanceClient.TickerPriceService(ctx, symbol)
 	if err != nil {
 		return 0, err
 	}

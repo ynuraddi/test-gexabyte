@@ -8,7 +8,7 @@ import (
 
 type Client interface {
 	KlineService(ctx context.Context, symbol, interval string, startTime, endTime int64, limit int) ([]*binance_connector.KlinesResponse, error)
-	TickerService(ctx context.Context, symbol string) (*binance_connector.TickerPriceResponse, error)
+	TickerPriceService(ctx context.Context, symbol string) (*binance_connector.TickerPriceResponse, error)
 	Ticker24hService(ctx context.Context, symbol string) (*binance_connector.Ticker24hrResponse, error)
 }
 
@@ -39,7 +39,7 @@ func (c *client) KlineService(ctx context.Context, symbol, interval string, star
 	return res, err
 }
 
-func (c *client) TickerService(ctx context.Context, symbol string) (*binance_connector.TickerPriceResponse, error) {
+func (c *client) TickerPriceService(ctx context.Context, symbol string) (*binance_connector.TickerPriceResponse, error) {
 	res, err := c.binance.NewTickerPriceService().Symbol(symbol).Do(ctx)
 
 	return res, err

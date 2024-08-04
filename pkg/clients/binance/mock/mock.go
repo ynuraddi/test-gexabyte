@@ -65,17 +65,17 @@ func (mr *MockClientMockRecorder) Ticker24hService(ctx, symbol interface{}) *gom
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Ticker24hService", reflect.TypeOf((*MockClient)(nil).Ticker24hService), ctx, symbol)
 }
 
-// TickerService mocks base method.
-func (m *MockClient) TickerService(ctx context.Context, symbol string) (*binance_connector.TickerPriceResponse, error) {
+// TickerPriceService mocks base method.
+func (m *MockClient) TickerPriceService(ctx context.Context, symbol string) (*binance_connector.TickerPriceResponse, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "TickerService", ctx, symbol)
+	ret := m.ctrl.Call(m, "TickerPriceService", ctx, symbol)
 	ret0, _ := ret[0].(*binance_connector.TickerPriceResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// TickerService indicates an expected call of TickerService.
-func (mr *MockClientMockRecorder) TickerService(ctx, symbol interface{}) *gomock.Call {
+// TickerPriceService indicates an expected call of TickerPriceService.
+func (mr *MockClientMockRecorder) TickerPriceService(ctx, symbol interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TickerService", reflect.TypeOf((*MockClient)(nil).TickerService), ctx, symbol)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TickerPriceService", reflect.TypeOf((*MockClient)(nil).TickerPriceService), ctx, symbol)
 }

@@ -214,7 +214,6 @@ const docTemplate = `{
                             "8h",
                             "12h",
                             "1d",
-                            "3d",
                             "1w",
                             "1M"
                         ],
@@ -239,6 +238,7 @@ const docTemplate = `{
                         "required": true
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
                         "description": "Page number",
                         "name": "page",

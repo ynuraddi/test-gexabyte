@@ -25,8 +25,6 @@ import (
 
 Так, секунды, минуты и часы считать будет легко, потому что можно просто используя ceil
 */
-
-// TODO: написать тесты
 func (s *Currency) GetPriceHistorical(ctx context.Context, req model.GetCurrencyPriceHistoricalDTOReq) (*model.GetCurrencyPriceHistoricalDTORes, error) {
 	st, mp := s.solvePagination(req.StartTime, req.EndTime, req.Limit, req.Page, req.Interval)
 	req.StartTime = st
@@ -82,41 +80,41 @@ func (s *Currency) solvePagination(startTime, endTime int64, limit, page int, in
 	i := time.Second.Milliseconds() // interval
 
 	startTime = ceil(startTime, i) * i
-	endTime = ceil(endTime, i) * i
+	endTime = (endTime / i) * i // на endTime не распространяется
 	switch interval {
 	case
 		"1s",
 		"1m", "3m", "5m", "15m", "30m",
-		"1h", "2h", "4h", "6h", "12h", "1d", "3d":
+		"1h", "2h", "4h", "6h", "12h", "1d":
 		i = int64(model.KlineInterval.GetDuration(interval).Milliseconds())
-		startTime, endTime = ceil(startTime, i)*i, ceil(endTime, i)*i
+		startTime, endTime = ceil(startTime, i)*i, (endTime/i)*i
 
-		maxPage = int(ceil(endTime-startTime, i*int64(limit)))
-		sTime = startTime + int64(countSkipIntervals)*i
+		maxPage = int(ceil(endTime-startTime+i, i*int64(limit)))
+		sTime = startTime + i*int64(countSkipIntervals)
 		return sTime, maxPage
 
 	case "1w":
-		i = int64(model.KlineInterval.GetDuration(interval))
-		startTime, endTime = ceilWeek(startTime), ceilWeek(endTime)
+		i = int64(model.KlineInterval.GetDuration(interval).Milliseconds())
+		startTime, endTime = ceilWeek(startTime), divWeek(endTime)
 
-		maxPage = int(ceil(endTime-startTime, i))
-		sTime = startTime + int64(countSkipIntervals)*i
+		maxPage = int(ceil(endTime-startTime+i, i*int64(limit)))
+		sTime = startTime + i*int64(countSkipIntervals)
 		return sTime, maxPage
 
 	case "1M":
-		startTime, endTime = ceilMonth(startTime), ceilMonth(endTime)
+		startTime, endTime = ceilMonth(startTime), divMonth(endTime)
 		st, et := time.UnixMilli(startTime), time.UnixMilli(endTime)
 
 		for st.Before(et) {
 			maxPage += 1
-			st = st.AddDate(0, 1, 0)
+			st = st.AddDate(0, limit, 0)
 		}
-
 		st = time.UnixMilli(startTime)
+
 		for i := 0; i < countSkipIntervals; i++ {
 			st = st.AddDate(0, 1, 0)
 		}
-		return st.UnixMilli(), maxPage
+		return st.UnixMilli(), maxPage + 1
 	}
 
 	return
@@ -130,10 +128,15 @@ func ceilDay(in int64) int64 {
 	t := time.UnixMilli(in)
 	d := time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, time.Local)
 
-	if t.After(d) {
+	if !t.Equal(d) {
 		return d.AddDate(0, 0, 1).UnixMilli() // return next day
 	}
 	return t.UnixMilli() // return 00:00 current day
+}
+
+func divDay(in int64) int64 {
+	t := time.UnixMilli(in)
+	return time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, time.Local).UnixMilli()
 }
 
 func ceilWeek(in int64) int64 {
@@ -145,12 +148,25 @@ func ceilWeek(in int64) int64 {
 	return d.UnixMilli()
 }
 
+func divWeek(in int64) int64 {
+	d := time.UnixMilli(divDay(in))
+	for d.Weekday() != time.Monday {
+		d = d.AddDate(0, 0, -1)
+	}
+	return d.UnixMilli()
+}
+
 func ceilMonth(in int64) int64 {
-	d := time.UnixMilli(ceilDay(in))
+	d := time.UnixMilli(in)
 	m := time.Date(d.Year(), d.Month(), 1, 0, 0, 0, 0, time.Local)
 
-	if d.After(m) {
+	if !d.Equal(m) {
 		return m.AddDate(0, 1, 0).UnixMilli()
 	}
 	return m.UnixMilli()
+}
+
+func divMonth(in int64) int64 {
+	d := time.UnixMilli(in)
+	return time.Date(d.Year(), d.Month(), 1, 0, 0, 0, 0, time.Local).UnixMilli()
 }

@@ -207,7 +207,6 @@
                             "8h",
                             "12h",
                             "1d",
-                            "3d",
                             "1w",
                             "1M"
                         ],
@@ -232,6 +231,7 @@
                         "required": true
                     },
                     {
+                        "minimum": 1,
                         "type": "integer",
                         "description": "Page number",
                         "name": "page",

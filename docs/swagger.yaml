@@ -226,7 +226,6 @@ paths:
         - 8h
         - 12h
         - 1d
-        - 3d
         - 1w
         - 1M
         in: query
@@ -245,6 +244,7 @@ paths:
         type: integer
       - description: Page number
         in: query
+        minimum: 1
         name: page
         required: true
         type: integer

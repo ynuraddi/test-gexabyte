@@ -76,10 +76,10 @@ func (s *Server) ListPricesCurrent(c *gin.Context) {
 //	@Tags			prices
 //	@Produce		json
 //	@Param			symbol		query		string										true	"Currency symbol"
-//	@Param			interval	query		string										true	"Interval"	Enums(1s, 1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w, 1M)
+//	@Param			interval	query		string										true	"Interval"	Enums(1s, 1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 1w, 1M)
 //	@Param			startTime	query		int64										true	"Start time in Unix timestamp milliseconds"
 //	@Param			endTime		query		int64										true	"End time in Unix timestamp milliseconds"
-//	@Param			page		query		int											true	"Page number"
+//	@Param			page		query		int											true	"Page number"		minimum(1)
 //	@Param			limit		query		int											true	"Max limit is 1000"	minimum(1)	maximum(1000)
 //	@Success		200			{object}	[]model.GetCurrencyPriceHistoricalDTORes	"Successful response with historical price data"
 //	@Failure		400			{object}	ErrMsg										"Invalid request parameters"

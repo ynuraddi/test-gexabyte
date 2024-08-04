@@ -45,6 +45,15 @@ definitions:
       open_time:
         type: integer
     type: object
+  model.GetCurrencyPriceDTO:
+    properties:
+      price:
+        type: number
+      symbol:
+        type: string
+      time:
+        type: integer
+    type: object
   model.GetCurrencyPriceHistoricalDTORes:
     properties:
       max_page:
@@ -178,7 +187,7 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/model.CurrencyPrice'
+              $ref: '#/definitions/model.GetCurrencyPriceDTO'
             type: array
         "400":
           description: Invalid request parameters

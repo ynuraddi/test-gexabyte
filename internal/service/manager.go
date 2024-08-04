@@ -6,9 +6,8 @@ import (
 	"gexabyte/internal/model"
 	"gexabyte/internal/repository"
 	"gexabyte/internal/service/currency"
+	"gexabyte/pkg/clients/binance"
 	"log/slog"
-
-	binance_connector "github.com/binance/binance-connector-go"
 )
 
 type Manager struct {
@@ -31,7 +30,7 @@ type Currency interface {
 func New(
 	cfg *config.Config,
 	logger *slog.Logger,
-	binanceClient *binance_connector.Client,
+	binanceClient binance.Client,
 	repository *repository.Manager,
 ) *Manager {
 	currency := currency.NewCurrency(repository.Currency, repository.CurrencyPrice, binanceClient, logger)

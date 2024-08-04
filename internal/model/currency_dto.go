@@ -44,5 +44,5 @@ type GetCurrencyPriceHistoricalDTORes struct {
 	Page    int `json:"page"`
 	MaxPage int `json:"max_page"`
 
-	Prices []CurrencyPriceInterval
+	Prices []CurrencyPriceInterval `json:"prices"`
 }

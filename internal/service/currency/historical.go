@@ -31,13 +31,7 @@ func (s *Currency) GetPriceHistorical(ctx context.Context, req model.GetCurrency
 	st, mp := s.solvePagination(req.StartTime, req.EndTime, req.Limit, req.Page, req.Interval)
 	req.StartTime = st
 
-	res, err := s.binanceClient.NewKlinesService().
-		Symbol(req.Symbol).
-		Interval(req.Interval).
-		StartTime(uint64(req.StartTime)).
-		EndTime(uint64(req.EndTime)).
-		Limit(int(req.Limit)).
-		Do(ctx)
+	res, err := s.binanceClient.KlineService(ctx, req.Symbol, req.Interval, req.StartTime, req.EndTime, req.Limit)
 	if err != nil {
 		return nil, err
 	}

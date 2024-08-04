@@ -62,7 +62,7 @@ func (s *Currency) fetchStats24H(ctx context.Context, symbols ...string) ([]mode
 }
 
 func (s *Currency) fetchStat24H(ctx context.Context, symbol string) (model.GetCurrencyStat24HDTO, error) {
-	res, err := s.binanceClient.NewTicker24hrService().Symbol(symbol).Do(ctx)
+	res, err := s.binanceClient.Ticker24hService(ctx, symbol)
 	if err != nil {
 		return model.GetCurrencyStat24HDTO{}, err
 	}

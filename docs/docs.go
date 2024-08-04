@@ -162,7 +162,7 @@ const docTemplate = `{
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/model.CurrencyPrice"
+                                "$ref": "#/definitions/model.GetCurrencyPriceDTO"
                             }
                         }
                     },
@@ -393,6 +393,20 @@ const docTemplate = `{
                     "type": "number"
                 },
                 "open_time": {
+                    "type": "integer"
+                }
+            }
+        },
+        "model.GetCurrencyPriceDTO": {
+            "type": "object",
+            "properties": {
+                "price": {
+                    "type": "number"
+                },
+                "symbol": {
+                    "type": "string"
+                },
+                "time": {
                     "type": "integer"
                 }
             }

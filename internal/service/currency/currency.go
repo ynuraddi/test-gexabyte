@@ -4,10 +4,9 @@ import (
 	"context"
 	"gexabyte/internal/model"
 	"gexabyte/internal/repository"
+	"gexabyte/pkg/clients/binance"
 	"log/slog"
 	"time"
-
-	binance_connector "github.com/binance/binance-connector-go"
 )
 
 const LoggerGroup = "CurrencyService"
@@ -16,7 +15,7 @@ type Currency struct {
 	currencyRepo      repository.Currency
 	currencyPriceRepo repository.CurrencyPrice
 
-	binanceClient *binance_connector.Client
+	binanceClient binance.Client
 
 	logger *slog.Logger
 
@@ -27,7 +26,7 @@ type Currency struct {
 func NewCurrency(
 	currencyRepo repository.Currency,
 	currencyPriceRepo repository.CurrencyPrice,
-	binanceClient *binance_connector.Client,
+	binanceClient binance.Client,
 	logger *slog.Logger,
 ) *Currency {
 	return &Currency{

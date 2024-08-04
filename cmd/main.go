@@ -5,11 +5,10 @@ import (
 	"gexabyte/internal/repository"
 	"gexabyte/internal/service"
 	"gexabyte/internal/transport/http"
+	"gexabyte/pkg/clients/binance"
 	"gexabyte/pkg/logger"
 	"log"
 	"time"
-
-	binance_connector "github.com/binance/binance-connector-go"
 )
 
 func init() {
@@ -30,7 +29,10 @@ func main() {
 		panic(err)
 	}
 
-	binanceClient := binance_connector.NewClient(cfg.Binance.ApiKey, cfg.Binance.SecretKey)
+	binanceClient := binance.New(&binance.Config{
+		ApiKey:    cfg.Binance.ApiKey,
+		SecretKey: cfg.Binance.SecretKey,
+	})
 
 	service := service.New(cfg, logger, binanceClient, repo)
 

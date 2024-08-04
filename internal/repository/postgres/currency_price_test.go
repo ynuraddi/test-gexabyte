@@ -55,4 +55,16 @@ func TestCurrencyPrice(t *testing.T) {
 	mock.ExpectExec("insert into currency_price").WithArgs(1, float64(2), now).WillReturnError(fmt.Errorf("other error"))
 	mock.ExpectRollback().WillReturnError(expectedErr)
 	assert.Error(t, expectedErr, repo.Create(context.Background(), in...))
+
+	mock.ExpectQuery("select id, currency_id, price, time from currency_price").
+		WillReturnRows(sqlmock.NewRows([]string{"id", "currency_id", "price", "time"}).AddRow(1, 1, 10.4, 1))
+	res, err := repo.List(context.Background())
+	assert.NoError(t, err)
+	assert.Equal(t, []model.CurrencyPrice{{ID: 1, CurrencyID: 1, Price: 10.4, Time: 1}}, res)
+
+	mock.ExpectQuery("select id, currency_id, price, time from currency_price").
+		WillReturnError(expectedErr)
+	res, err = repo.List(context.Background())
+	assert.Error(t, err)
+	assert.Equal(t, []model.CurrencyPrice(nil), res)
 }

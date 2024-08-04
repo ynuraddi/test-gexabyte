@@ -114,12 +114,10 @@ func (s *Currency) fetchCurrentPrices(ctx context.Context, symbols ...string) (m
 }
 
 func (s *Currency) fetchCurrentPrice(ctx context.Context, symbol string) (price float64, err error) {
-	res, err := s.binanceClient.NewTickerPriceService().Symbol(symbol).Do(ctx)
+	res, err := s.binanceClient.TickerService(ctx, symbol)
 	if err != nil {
 		return 0, err
 	}
-
-	fmt.Println("TICKER: ", res, err)
 
 	return strconv.ParseFloat(res.Price, 64)
 }
